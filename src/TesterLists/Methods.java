@@ -1,18 +1,21 @@
 package TesterLists;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Methods {
     /** Створити метод countOccurance, що приймає на вхід рядковий список як параметр і довільний рядок.
      Список заповнений довільними словами 10-20 штук, які можуть повторюватись у необмеженій кількості.
      Порахувати скільки разів зустрічається переданий рядок як другий аргумент */
     public static int countOccurance(List<String> words, String regularEx) {
-        int counter = 0;
-        for (String word : words) {
-            if (word.equalsIgnoreCase(regularEx.trim())) {
-                counter++;
-            }
+        if (words == null || regularEx == null || words.isEmpty()) {
+            return 0;
         }
+        int counter = (int) words.stream()
+                .filter(word -> word.matches(regularEx.trim()))
+                .count();
         return counter;
     }
     /**Створити метод toList, що приймає на вхід цілісний масив довільної довжини.
@@ -28,16 +31,9 @@ public class Methods {
      які можуть повторюватися в необмеженій кількості.
      Необхідно повернути новий числовий список, що містить тільки унікальні числа */
     public static List<Number> findUnique(List<Number> inputSequense) {
-        List<Number> uniqueSequense = new LinkedList<>();
-        Collection<Number> repeatSequense = new ArrayList<>();
-        for (Number number : inputSequense) {
-            if (!uniqueSequense.contains(number)) {
-                uniqueSequense.add(number);
-            } else {
-                repeatSequense.add(number);
-            }
-        }
-        uniqueSequense.removeAll(repeatSequense);
+        List<Number> uniqueSequense = inputSequense.stream()
+                .distinct()
+                .collect(Collectors.toCollection(LinkedList::new));
         return uniqueSequense;
     }
 

@@ -2,6 +2,9 @@ package phonebook;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 /** Клас Телефонний Довідник зберігає безліч записів типу даних Запис */
 public class TelephoneDirectory<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -29,25 +32,19 @@ public class TelephoneDirectory<T> {
     /** У класі Телефонний Довідник реалізувати метод find(). Метод здійснює пошук конкретного запису на ім'я.
      Якщо запис знайдений (перший знайдений), тоді його необхідно повернути, інакше повертається null */
     public T find(String name) {
-        for (int i = 0; i < size(); i++) {
-            T iterationObject = (T) insideStorage[i];
-            if (iterationObject.equals(name)) {
-                return iterationObject;
-            }
-        }
-        return null;
+        return IntStream.range(0, size()).mapToObj(i -> (T) insideStorage[i])
+                .filter(iterationObject -> iterationObject.equals(name))
+                .findFirst()
+                .orElse(null);
     }
 
     /** У класі Телефонний Довідник реалізувати метод findAll(). Метод здійснює пошук записів на ім'я.
      Якщо записи знайдені, тоді їх необхідно повернути, інакше повертається null */
     public List<T> findAll(String name) {
-        List<T> outputArray = new ArrayList<>();
-        for (int i = 0; i < size(); i++) {
-            T iterationObject = (T) insideStorage[i];
-            if (iterationObject.equals(name)) {
-                outputArray.add(iterationObject);
-            }
-        }
+        List<T> outputArray = IntStream.range(0, size())
+                .mapToObj(i -> (T) insideStorage[i])
+                .filter(iterationObject -> iterationObject.equals(name))
+                .collect(Collectors.toList());
         if (outputArray.size() != 0) {
             return outputArray;
         } else {
